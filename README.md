@@ -1,6 +1,8 @@
-# whatsapp-chat-analyzer-streamlit
+# Whatsapp-chat-analyzer-streamlit
 
-<p>The WhatsApp Chat Analyzer is a powerful Python application built with Streamlit, designed to provide comprehensive insights into your WhatsApp chat conversations. WhatsApp chats often contain a wealth of information and personal interactions, and this tool helps you extract valuable statistics and visualizations to gain a deeper understanding of your chat history.</p>
+<p>This project demonstrates the power of data analysis and visualization by transforming unstructured WhatsApp chat exports into meaningful insights. Built with Python and Streamlit, this interactive web application parses chat files, processes the text data using Pandas, and generates insightful visualizations with Plotly, Matplotlib and Seaborn.
+
+The analyzer extracts key statistics, visualizes communication patterns over time (monthly, daily, weekly), identifies the most active users and busiest periods, performs text analysis to find common words and emojis, and presents this information in an easy-to-understand dashboard. It's designed to handle various export formats (Android/iOS, 12/24-hour) robustly, showcasing data cleaning and processing skills essential for any analyst.</p>
 
 <h2>Features</h2>
 
@@ -18,7 +20,7 @@
 <h2>How to Use</h2>
 
 <ol>
-    <li>Upload your WhatsApp chat data exported in 24-hour format.</li>
+    <li>Upload your WhatsApp chat file (exported `.txt` file).</li>
     <li>Select a specific user (participant) for individual analysis or choose "Overall" for an overview.</li>
     <li>Click the "Show Analysis" button to generate insights and visualizations.</li>
 </ol>
