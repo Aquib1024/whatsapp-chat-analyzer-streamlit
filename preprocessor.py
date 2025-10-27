@@ -23,7 +23,6 @@ def preprocess(data):
     parsed_data = []
     message_buffer = []
 
-    # --- Enhanced Cleaning ---
     # Remove common zero-width space characters and others that might interfere
     invisible_chars = ['\u200e', '\u200f', '\u202a', '\u202b', '\u202c', '\u202d', '\u202e', '\ufeff']
     cleaned_data = data
@@ -84,7 +83,6 @@ def preprocess(data):
         "%d/%m/%y %H:%M:%S",    "%d/%m/%Y %H:%M:%S",
     ]
 
-    # Try inferring first (often works for simple cases)
     try:
         parsed_dates = pd.to_datetime(df['datetime_str'], infer_datetime_format=True)
     except Exception: # Broad exception to catch various parsing issues

@@ -6,15 +6,11 @@ import emoji
 
 extract = URLExtract()
 
-# --- START OF CHANGE 1: Updated Stopwords ---
-# I have added the new words from your word cloud to this list
+# Added the new words from word cloud to this list
 STOP_WORDS = {
     # Added the numbers with periods you provided
     "1.", "2.", "3.", "4.", "5.", "6.", "7.", "8.", "9.", "10.",
-    "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-    
-    # Added the symbols
-    "?", "-",
+    "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "?", "-",
     
     # NEW WORDS ADDED
     "omitted", "audio", "gif", "call", "missed", "deleted", "message", "https", "http",
@@ -52,7 +48,7 @@ STOP_WORDS = {
     "help", "hence", "her", "here", "hereafter", "hereby", "herein", "here's", "hereupon", "hers", 
     "herself", "he's", "hi", "him", "himself", "his", "hither", "hm", "hmm", "ho", "hoga", "hoge", 
     "hogi", "hona", "honaa", "hone", "honge", "hongi", "honi", "hopefully", "hota", "hotaa", "hote", 
-"hoti", "how", "howbeit", "however", "hoyenge", "hoyengi", "hu", "hua", "hue", "huh", "hui", 
+    "hoti", "how", "howbeit", "however", "hoyenge", "hoyengi", "hu", "hua", "hue", "huh", "hui", 
     "hum", "humein", "humne", "hun", "huye", "huyi", "i", "i'd", "idk", "ie", "if", "i'll", "i'm", 
     "imo", "in", "inasmuch", "inc", "inhe", "inhi", "inho", "inka", "inkaa", "inke", "inki", "inn", 
     "inner", "inse", "insofar", "into", "inward", "is", "ise", "image omitted", "video omitted", 
@@ -77,7 +73,7 @@ STOP_WORDS = {
     "m", "maan", "maana", "maane", "maani", "maano", "magar", "mai", "main", "maine", "mainly", 
     "mana", "mane", "mani", "mano", "many", "mat", "may", "maybe", "me", "mean", "meanwhile", 
     "mein", "mera", "mere", "merely", "meri", "might", "mightn", "mightnt", "mightn't", "mil", 
-    "mjhe", "more", "moreover", "most", "mostly", "much", "mujhe", "must", "mustn", "mustnt", 
+    "mjhe", "more", "moreover", "most", "mostly", "message", "much", "mujhe", "must", "mustn", "mustnt", 
     "mustn't", "my", "myself", "na", "naa", "naah", "nahi", "nahin", "nai", "name", "namely", "nd", 
     "ne", "near", "nearly", "necessary", "neeche", "need", "needn", "neednt", "needn't", "needs", 
     "neither", "never", "nevertheless", "new", "next", "nhi", "nine", "no", "nobody", "non", "none", 
@@ -122,7 +118,6 @@ STOP_WORDS = {
     "yeah", "yeh", "yehi", "yes", "yet", "you", "you'd", "you'll", "your", "you're", "yours", 
     "yourself", "yourselves", "you've", "yup", "https", "voice", "document", "sticket", "pdf", "image"
 }
-# --- END OF CHANGE 1 ---
 
 
 # This set is used to filter *entire messages* that are just media notifications
@@ -136,9 +131,7 @@ MEDIA_MESSAGES = set([
     '<media omitted>',
     'you changed this group\'s icon',
     'this message was deleted'
-    # Add any other system/media messages you find
 ])
-# ----------------------------------------
 
 
 def fetch_stats(selected_user, df):
@@ -180,7 +173,7 @@ def create_wordcloud(selected_user, df):
     # Filter out group notifications
     temp = temp[temp['user'] != 'group_notification']
     
-    # --- START OF CHANGE 2: Added .str.strip() ---
+    # Added .str.strip() ---
     # This now removes hidden whitespace before checking the list
     temp = temp[~temp['message'].str.lower().str.strip().isin(MEDIA_MESSAGES)]
     # --- END OF CHANGE 2 ---
@@ -199,7 +192,6 @@ def create_wordcloud(selected_user, df):
     if not temp.empty:
         temp.loc[:, 'message'] = temp['message'].apply(remove_stop_words)
         
-        # This line is correct from our last fix
         all_words = temp['message'].str.cat(sep=" ")
         
         if all_words.strip():
@@ -215,10 +207,9 @@ def most_common_words(selected_user, df):
     temp = df.copy()
     temp = temp[temp['user'] != 'group_notification']
     
-    # --- START OF CHANGE 2: Added .str.strip() ---
+    # Added .str.strip() ---
     # This now removes hidden whitespace before checking the list
     temp = temp[~temp['message'].str.lower().str.strip().isin(MEDIA_MESSAGES)]
-    # --- END OF CHANGE 2 ---
 
     words = []
     for message in temp['message']:
@@ -228,11 +219,16 @@ def most_common_words(selected_user, df):
                 words.append(word)
 
     most_common_df = pd.DataFrame(Counter(words).most_common(15))
+    
+    # Added column names here for robustness
+    if not most_common_df.empty:
+        most_common_df.columns = ['Word', 'Count']
+        
     return most_common_df
 
 def emoji_helper(selected_user, df):
     if selected_user != 'Overall':
-        df = df[df['user'] == selected_id]
+        df = df[df['user'] == selected_user]
 
     emojis = []
     for message in df['message']:
